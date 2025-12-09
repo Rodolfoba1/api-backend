@@ -1,37 +1,101 @@
-# API CRUD de Usuarios
+# API CRUD de Usuarios con Supabase
 
-Aplicación de API REST para gestionar usuarios con operaciones CRUD completas.
+Aplicación de API REST para gestionar usuarios con operaciones CRUD completas, integrada con **Supabase** (PostgreSQL en la nube).
+
+## 🎯 Características Principales
+
+✅ **Operaciones CRUD** - Crear, leer, actualizar y eliminar usuarios  
+✅ **Validaciones robustas** - Nombre (3-100 caracteres), email válido, edad >= 18  
+✅ **Base de datos en la nube** - Supabase PostgreSQL  
+✅ **IDs autogenerados** - BIGSERIAL por Supabase  
+✅ **Timestamps automáticos** - Fecha de creación registrada  
+✅ **CORS habilitado** - Compatible con frontend  
+✅ **Manejo de errores completo** - Respuestas JSON consistentes  
+✅ **Arquitectura modular** - Separación de responsabilidades  
 
 ## 📋 Estructura del Proyecto
 
 ```
 api/
 ├── src/
+│   ├── config/
+│   │   └── supabase.js             # Configuración de conexión Supabase
 │   ├── controllers/
-│   │   └── usuarioController.js    # Lógica de negocio para usuarios
+│   │   └── usuarioController.js    # Lógica de negocio y validación
 │   ├── models/
-│   │   └── usuario.js              # Modelo de datos de usuarios
-│   ├── routes/
-│   │   └── usuarios.js             # Rutas de API
-│   └── middleware/
-├── server.js                        # Archivo principal del servidor
+│   │   └── usuario.js              # Acceso a datos (Supabase)
+│   ├── middleware/
+│   │   └── validaciones.js         # Funciones de validación
+│   └── routes/
+│       └── usuarios.js             # Definición de rutas REST
+├── server.js                        # Servidor Express principal
 ├── package.json                     # Dependencias del proyecto
-└── README.md                        # Este archivo
+├── .env                             # Variables de entorno (NO SUBIR)
+├── .gitignore                       # Archivos excluidos de git
+├── README.md                        # Este archivo
+├── CAMPOS_REQUERIDOS.md             # Especificación de campos
+├── VALIDACIONES.md                  # Detalles de validaciones
+├── ANALISIS_CODIGO.md               # Análisis de calidad del código
+└── REFACTORIZACIÓN_MODULAR.md       # Propuesta de mejoras
 ```
 
 ## 🚀 Instalación y Uso
 
-### 1. Instalar dependencias
+### 1. Requisitos Previos
+- Node.js v14+ instalado
+- Cuenta de Supabase (gratuita en https://supabase.com)
+- Git instalado
+
+### 2. Clonar el repositorio
+```bash
+git clone https://github.com/Rodolfoba1/api-backend.git
+cd api-backend
+```
+
+### 3. Instalar dependencias
 ```bash
 npm install
 ```
 
-### 2. Iniciar el servidor
+### 4. Configurar variables de entorno
+Crea un archivo `.env` en la raíz del proyecto:
+
+```env
+SUPABASE_URL=https://tu-proyecto.supabase.co
+SUPABASE_KEY=tu-clave-anonima-supabase
+```
+
+**Obtener tus credenciales:**
+1. Ve a https://supabase.com/dashboard
+2. Selecciona tu proyecto
+3. Ve a Settings → API
+4. Copia `Project URL` y `anon public key`
+
+### 5. Crear tabla en Supabase
+
+Ejecuta esta SQL en tu proyecto Supabase:
+
+```sql
+CREATE TABLE usuarios (
+  id BIGSERIAL PRIMARY KEY,
+  nombre TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  edad INTEGER NOT NULL,
+  fechaCreacion TIMESTAMP DEFAULT NOW()
+);
+```
+
+### 6. Iniciar el servidor
 ```bash
 npm start
 ```
 
 El servidor se ejecutará en `http://localhost:3000`
+
+**Output esperado:**
+```
+🚀 Servidor ejecutándose en http://localhost:3000
+```
 
 ## 📡 Endpoints API
 
@@ -227,17 +291,44 @@ curl -X DELETE http://localhost:3000/usuarios/1
 ✅ Almacenamiento en memoria (escalable a base de datos)  
 ✅ IDs autoincremental  
 
-## 🔄 Próximas Mejoras (Opcional)
+## 🔄 Próximas Mejoras
 
-- Integración con base de datos (MongoDB, PostgreSQL, etc.)
-- Autenticación y autorización
-- Validación más robusta (email, formato, etc.)
-- Paginación de resultados
-- Búsqueda y filtrado de usuarios
-- Logging
-- Tests unitarios y de integración
-- Swagger/OpenAPI documentation
+- [ ] **Logging**: Implementar Winston/Pino para auditoría
+- [ ] **Rate Limiting**: Proteger contra brute force
+- [ ] **Testing**: Jest para tests unitarios e integración
+- [ ] **Autenticación**: JWT tokens para seguridad
+- [ ] **Swagger**: Documentación interactiva OpenAPI
+- [ ] **Variables de entorno**: Configuración por ambiente (dev, test, prod)
+- [ ] **Paginación**: Limitar resultados de listados
+- [ ] **Búsqueda**: Filtrado avanzado de usuarios
+
+## 📚 Documentación Adicional
+
+- **[CAMPOS_REQUERIDOS.md](./CAMPOS_REQUERIDOS.md)** - Especificación de campos y tipos de datos
+- **[VALIDACIONES.md](./VALIDACIONES.md)** - Detalles de las reglas de validación
+- **[ANALISIS_CODIGO.md](./ANALISIS_CODIGO.md)** - Análisis de calidad y arquitectura
+- **[REFACTORIZACIÓN_MODULAR.md](./REFACTORIZACIÓN_MODULAR.md)** - Propuesta de mejoras frontend
+- **[SUPABASE_SETUP.md](./SUPABASE_SETUP.md)** - Guía de configuración Supabase
+
+## 🤝 Contribuir
+
+1. Fork el repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo licencia MIT - ver archivo LICENSE para más detalles.
+
+## 👤 Autor
+
+**Rodolfoba1**
+- GitHub: [@Rodolfoba1](https://github.com/Rodolfoba1)
+- Email: awirodolfo@gmail.com
 
 ---
 
-**Desarrollado con Express.js** ✨
+**Stack Tecnológico:** Express.js • Node.js • Supabase • PostgreSQL  
+**Última actualización:** Diciembre 2025
